@@ -8,15 +8,17 @@ void dibujar(int matriz[dimx][dimy]){
     for (int x=0; x<3; x++){
         for (int y=0; y<3; y++){
             if (matriz[x][y] == 0){
-                printf(BLANCO_F "%d" RESET_COLOR, matriz[x][y]);
+                printf(Back_BLUE "%d" Style_RESET_ALL, matriz[x][y]);
             }
             if (matriz[x][y] == 1){
-                printf(ROJO_F "%d" RESET_COLOR, matriz[x][y]);
+                printf(Back_LIGHTBLUE_EX "%d" Style_RESET_ALL, matriz[x][y]);
             }
             if (matriz[x][y] == 2){
-                printf(VERDE_F "%d" RESET_COLOR, matriz[x][y]);
+                printf(Fore_BLUE "%d" Style_RESET_ALL, matriz[x][y]);
             }
-            
+            if (matriz[x][y] == 3){
+                printf(Fore_LIGHTBLUE_EX "%d" Style_RESET_ALL, matriz[x][y]);
+            }
         }
         printf("\n");
     }
