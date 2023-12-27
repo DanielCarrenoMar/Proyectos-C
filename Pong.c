@@ -17,6 +17,7 @@ enum dibujo {
 void crear(char tablero[H][W], int initjug1[2], int initjug2[2], int pospel[2]);
 void dibujar(char tablero[H][W]);
 void bucle(char tablero[H][W], int pospel[2], int initjug1[2], int initjug2[2], int modpel[2]);
+void input(char tablero[H][W], int pospel[2], int initjug1[2], int initjug2[2], int modpel[2], int *punto);
 
 int main (){
     
