@@ -55,3 +55,37 @@ void poligono(int  coords[16][2], int elemt, char sprite){
         line(coords[i][0], coords[i][1], coords[i + 1][0], coords[i + 1][1], sprite);
     }
 }
+
+void recuadro(int x, int y, int w, int h){
+
+    for (int i = x; i < x + w; i++){
+        gotoxy(i, y);
+        printf("%c", 205);
+        gotoxy(i, y + h);
+        printf("%c", 205);
+    }
+    for (int i = y; i < y + h; i++){
+        gotoxy(x, i);
+        printf("%c", 186);
+        gotoxy(x + w, i);
+        printf("%c", 186);
+    }
+    gotoxy(x, y); printf("%c", 201);
+    gotoxy(x + w, y); printf("%c", 187);
+    gotoxy(x, y + h); printf("%c", 200);
+    gotoxy(x + w, y + h); printf("%c", 188);
+}
+
+void hidecursor(){
+    printf("\e[?25l");
+}
+
+void showcursor() {
+    printf("\e[?25h");
+}
+
+void desactivarmax() {
+    HWND consoleWindow = GetConsoleWindow();
+    SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
+}
+
