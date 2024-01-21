@@ -6,9 +6,15 @@
 
 #define HEIGHT 45
 #define WIDTH 150
+#define PANTHEIGHT 30
+#define PANTWIDTH 125
 
 void logo();
-void dibujar(int tablero[200][200], int camara[2]);
+void dibujo(int tablero[200][200], int camara[2]);
+void borrar(int tablero[200][200], int camara[2]);
+void playerController(int player[2], int camara[2], int tablero[200][200]);
+void camaraController(int player[2], int camara[2], int tablero[200][200]);
+void preset(int x, int y, int tablero[200][200]);
 
 int main()
 {   
@@ -18,71 +24,114 @@ int main()
             tablero[i][j] = 32;
         }
     }
-    int camara[2] = {0,0};
+    int camara[2] = {100,100};
+    int player[2] = {11,11};
 
     setConsoleDim(WIDTH,HEIGHT);
     setConsoleColor('0','f');
     hidecursor();
     desactivarmax();
 
-    //logo();
-    
-    recuadro(0,30,149,14);
-    recuadro(125,0,24,30);
-    gotoxy(126,1); printf("R O G U E");
+    recuadro(0,PANTHEIGHT,WIDTH-1,HEIGHT-PANTHEIGHT-1);
+    recuadro(PANTWIDTH,0,WIDTH-PANTWIDTH-1,PANTHEIGHT);
 
-    line(0,0,149,44,219,tablero);
-    poligono((int[16][2]){{0,0},{149,0},{149,44},{0,44}}, 4, 219);
-    dibujar(tablero, camara);
+    preset(70,100, tablero);
+    preset(90,100, tablero);
+    preset(110,100, tablero);
+    dibujo(tablero, camara);
 
-    gotoxy(1,1); printf("1");
+    while (1)
+    {
+        playerController(player, camara, tablero);
+        camaraController(player, camara, tablero);
+
+        gotoxy(0,HEIGHT-5); printf("Camara: %d, %d  ", camara[0], camara[1]);
+    }
+
     return 0;
 }
 
-void logo(){
-    int logo[16][64] = {
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-    };
-    int cuadro[5] = {176, 177, 178, 219, 255};
-
-    for (int a = 0; a < 5; a++){
-        if (kbhit() == 1){
-            a = 4;
-        }
-
-        Sleep(1000);
-        for (int i = 0; i < 16; i++){
-            for (int j = 0; j < 64; j++){
-                if (logo[i][j] == 1){
-                    gotoxy((WIDTH-64)/2 + j,i+10); printf("%c", cuadro[a]);
-                }
+void dibujo(int tablero[200][200], int camara[2]){
+    for (int i = 0; i < PANTHEIGHT; i++){
+        for (int j = 0; j < PANTWIDTH; j++){
+            if (tablero[i+camara[1]][j+camara[0]] != 32){
+                gotoxy(j,i); printf("%c", tablero[i+camara[1]][j+camara[0]]);
             }
         }
     }
 }
 
-void dibujar(int tablero[200][200], int camara[2]){
-    int x = camara[0];
-    int y = camara[1];
-
-    for (int i = 0; i < 30; i++){
-        for (int j = 0; j < 125; j++){
-            gotoxy(j,i); printf("%c", tablero[x+j][y+i]);
+void borrar(int tablero[200][200], int camara[2]){
+    for (int i = 0; i < PANTHEIGHT; i++){
+        for (int j = 0; j < PANTWIDTH; j++){
+            if (tablero[i+camara[1]][j+camara[0]] != 32){
+                gotoxy(j,i); printf("%c", 32);
+            }
         }
     }
+}
+
+void playerController(int player[2], int camara[2], int tablero[200][200]){
+    int playerTableroUP = tablero[player[1]+camara[1]-1][player[0]+camara[0]];
+    int playerTableroDOWN = tablero[player[1]+camara[1]+1][player[0]+camara[0]];
+    int playerTableroLEFT = tablero[player[1]+camara[1]][player[0]+camara[0]-1];
+    int playerTableroRIGHT = tablero[player[1]+camara[1]][player[0]+camara[0]+1];
+
+    printf(Fore_BLUE);
+    gotoxy(player[0], player[1]); printf("%c", 1);
+
+    char tecla = getch();
+    gotoxy(player[0], player[1]); printf("%c", 32);
+    if (tecla == 'w' && playerTableroUP != 219){
+        player[1] -= 1;
+    }
+    if (tecla == 's' && playerTableroDOWN != 219){
+        player[1] += 1;
+    }
+    if (tecla == 'a' && playerTableroLEFT != 219){
+        player[0] -= 1;
+    }
+    if (tecla == 'd' && playerTableroRIGHT != 219){
+        player[0] += 1;
+    }
+    printf(Style_RESET_ALL);
+}
+
+void camaraController(int player[2], int camara[2], int tablero[200][200]){
+    if (player[0] > PANTWIDTH - 10){
+            borrar(tablero, camara);
+            camara[0] += 1;
+            dibujo(tablero, camara);
+            player[0] = PANTWIDTH - 10;
+    }
+    if (player[0] < 10){
+        borrar(tablero, camara);
+        camara[0] -= 1;
+        dibujo(tablero, camara);
+        player[0] = 10;
+    }
+    if (player[1] > PANTHEIGHT - 5){
+        borrar(tablero, camara);
+        camara[1] += 1;
+        dibujo(tablero, camara);
+        player[1] = PANTHEIGHT - 5;
+    }
+    if (player[1] < 5){
+        borrar(tablero, camara);
+        camara[1] -= 1;
+        dibujo(tablero, camara);
+        player[1] = 5;
+    }
+}
+
+void preset(int x, int y, int tablero[200][200]){
+    int coords[16][2] = {
+        {x, y},
+        {x+20, y},
+        {x+20, y+10},
+        {x, y+10},
+        {x, y}
+    };
+    poligono(coords, 5, 219, tablero);
+    tablero[y+10][x+10] = 220;
 }

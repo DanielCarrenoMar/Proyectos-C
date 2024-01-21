@@ -23,7 +23,7 @@ void gotoxy(int x, int y){ // centrar texto en la consola
 	SetConsoleCursorPosition(hcon,dwPos);
 }
 
-void line(int x1, int y1, int x2, int y2, char sprite, int tablero[200][200], int dibujar = 0){
+void line(int x1, int y1, int x2, int y2, int sprite, int tablero[200][200]){
     int paso;
 
     if (x1 == x2){
@@ -53,9 +53,9 @@ void line(int x1, int y1, int x2, int y2, char sprite, int tablero[200][200], in
     }
 }
 
-void poligono(int  coords[16][2], int elemt, char sprite){
+void poligono(int  coords[16][2], int elemt, int sprite,  int tablero[200][200]){
     for (int i = 0; i < elemt-1; i++){
-        line(coords[i][0], coords[i][1], coords[i + 1][0], coords[i + 1][1], sprite, 0);
+        line(coords[i][0], coords[i][1], coords[i + 1][0], coords[i + 1][1], sprite, tablero);
     }
 }
 
