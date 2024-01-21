@@ -8,13 +8,14 @@
 #define WIDTH 150
 
 void logo();
+void dibujar(int tablero[200][200], int camara[2]);
 
 int main()
 {   
     int tablero[200][200];
     for (int i = 0; i < 200; i++){
         for (int j = 0; j < 200; j++){
-            tablero[i][j] = 219;
+            tablero[i][j] = 32;
         }
     }
     int camara[2] = {0,0};
@@ -30,6 +31,8 @@ int main()
     recuadro(125,0,24,30);
     gotoxy(126,1); printf("R O G U E");
 
+    line(0,0,149,44,219,tablero);
+    poligono((int[16][2]){{0,0},{149,0},{149,44},{0,44}}, 4, 219);
     dibujar(tablero, camara);
 
     gotoxy(1,1); printf("1");

@@ -23,20 +23,22 @@ void gotoxy(int x, int y){ // centrar texto en la consola
 	SetConsoleCursorPosition(hcon,dwPos);
 }
 
-void line(int x1, int y1, int x2, int y2, char sprite){
+void line(int x1, int y1, int x2, int y2, char sprite, int tablero[200][200], int dibujar = 0){
     int paso;
 
     if (x1 == x2){
         if (y1 < y2){paso = 1;}else{paso = -1;}
         for (int i = y1; i != y2; i += paso){
-            gotoxy(x1, i);
-            printf("%c", sprite);
+            //gotoxy(x1, i);
+            //printf("%c", sprite);
+            tablero[i][x1] = sprite;
         }
     }else if (y1 == y2){
         if (x1 < x2){paso = 1;}else{paso = -1;}
         for (int i = x1; i != x2; i += paso){
-            gotoxy(i, y1);
-            printf("%c", sprite);
+            //gotoxy(i, y1);
+            //printf("%c", sprite);
+            tablero[y1][i] = sprite;
         }
     }
     else{
@@ -44,15 +46,16 @@ void line(int x1, int y1, int x2, int y2, char sprite){
         float b = y1 - m * x1;
         if (x1 < x2){paso = 1;}else{paso = -1;}
         for (int i = x1; i != x2; i += paso){
-            gotoxy(i, m * i + b);
-            printf("%c", sprite);
+            int y = m * i + b;
+            //printf("%c", sprite);
+            tablero[y][i] = sprite;
         }
     }
 }
 
 void poligono(int  coords[16][2], int elemt, char sprite){
     for (int i = 0; i < elemt-1; i++){
-        line(coords[i][0], coords[i][1], coords[i + 1][0], coords[i + 1][1], sprite);
+        line(coords[i][0], coords[i][1], coords[i + 1][0], coords[i + 1][1], sprite, 0);
     }
 }
 
