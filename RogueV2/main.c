@@ -1,30 +1,38 @@
-#include <stdio.h>
-#include "librerias/decoc.h"
-
-#define Alto 20
+#define Alto 30
 #define Ancho 40
 
-void crearPlayer(short unsigned int tablero[Alto][Ancho], int* player, int id){
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "librerias/decoc.h"
+
+void crearPlayer( int tablero[Alto][Ancho], int* player, int id){
     int x = player[0];
     int y = player[1];
 
     tablero[y][x] = id;
 }
 
-void inputPlayer(int* player){
+void inputPlayer( int tablero[Alto][Ancho],int* player){
+    int x = player[0];
+    int y = player[1];
+
+    tablero[y][x] = 0;
+
+
     if (kbhit()){
         char key = getch();
 
-        if (key == 'w'){
+        if (key == 'w' && tablero[y-1][x] == 0){
             player[1] -= 1;
         }
-        if (key == 's'){
+        if (key == 's' && tablero[y+1][x] == 0){
             player[1] += 1;
         }
-        if (key == 'a'){
+        if (key == 'a' && tablero[y][x-1] == 0){
             player[0] -= 1;
         }
-        if (key == 'd'){
+        if (key == 'd' && tablero[y][x+1] == 0){
             player[0] += 1;
         }
     }
@@ -35,9 +43,16 @@ void inputPlayer(int* player){
     else if (player[1] > Alto-1){ player[1] = Alto-1;}
 }
 
-void crearCasa(short unsigned int tablero[Alto][Ancho], int x, int y, int ancho, int alto){
+void crearCasa( int tablero[Alto][Ancho], int x, int y, int ancho, int alto){
     if (x < 0 || x > Ancho || y < 0 || y > Alto){
         return;
+    }
+    for(int i = -1; i < alto+1; i++){
+        for(int j = -1; j < ancho+1; j++){
+            if (tablero[y+i][x+j] != 0){
+                return crearCasa(tablero, rand() % 20, rand() % 20, ancho, alto);
+                }
+        }
     }
 
     for(int i = 0; i < alto; i++){
@@ -53,7 +68,7 @@ void crearCasa(short unsigned int tablero[Alto][Ancho], int x, int y, int ancho,
     }
 }
 
-void dibujarPantalla(short unsigned int tablero[Alto][Ancho], int posx, int posy){
+void dibujarPantalla( int tablero[Alto][Ancho], int posx, int posy){
     
     for(int y = 0; y < Alto; y++){
         for(int x = 0; x < Ancho; x++){
@@ -67,18 +82,12 @@ void dibujarPantalla(short unsigned int tablero[Alto][Ancho], int posx, int posy
     }
 }
 
-void borrarPantalla(short unsigned int tablero[Alto][Ancho], int posx, int posy){
+void borrarPantalla( int tablero[Alto][Ancho], int posx, int posy){
     for(int i = 0; i < Alto; i++){
         for(int j = 0; j < Ancho; j++){
-            if(tablero[i][j] != 0){
+            if(tablero[i][j] != 0 && tablero[i][j] != 1){
                 gotoxy(j+posx,i+posy); printf(" ");
             }
-        }
-    }
-
-    for (int i = 0; i < Alto; i++){
-        for (int j = 0; j < Ancho; j++){
-            tablero[i][j] = 0;
         }
     }
 }
@@ -87,8 +96,9 @@ int main(){
     setConsoleDim(100, 40);
     setConsoleColor('0','F');
     hidecursor();
+    srand(time(0));
 
-    short unsigned int tablero[Alto][Ancho];
+    int tablero[Alto][Ancho];
 
     for(int i = 0; i < Alto; i++){
         for(int j = 0; j < Ancho; j++){
@@ -96,16 +106,17 @@ int main(){
         }
     }
 
-    int player[2] = {3,3};
-
+    int player[2] = {15,5};
+    for (int i = 0; i < 8; i++){
+        crearCasa(tablero, rand() % 20, rand() % 20, 5, 5);
+    }
     while(1){
         borrarPantalla(tablero, 30, 8);
-        crearCasa(tablero, 5, 5, 10, 10);
 
         gotoxy(0,0); printf("%d  , %d  ", player[0], player[1]);
 
+        inputPlayer(tablero, player);
         crearPlayer(tablero, player, 2);
-        inputPlayer(player);
 
         dibujarPantalla(tablero, 30, 8);
         Sleep(100);
