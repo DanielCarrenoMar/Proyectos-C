@@ -1,5 +1,5 @@
-#define Alto 30
-#define Ancho 40
+#define Alto 40
+#define Ancho 100
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,28 +43,87 @@ void inputPlayer( int tablero[Alto][Ancho],int* player){
     else if (player[1] > Alto-1){ player[1] = Alto-1;}
 }
 
-void crearCasa( int tablero[Alto][Ancho], int x, int y, int ancho, int alto){
-    if (x < 0 || x > Ancho || y < 0 || y > Alto){
-        return;
-    }
-    for(int i = -1; i < alto+1; i++){
-        for(int j = -1; j < ancho+1; j++){
-            if (tablero[y+i][x+j] != 0){
-                return crearCasa(tablero, rand() % 20, rand() % 20, ancho, alto);
-                }
-        }
-    }
-
-    for(int i = 0; i < alto; i++){
-        for(int j = 0; j < ancho; j++){
-            if(i == 0 || i == alto-1){
-                tablero[y+i][x+j] = 1;
-            }else if(j == 0 || j == ancho-1){
-                tablero[y+i][x+j] = 1;
-            }else{
-                tablero[y+i][x+j] = 0;
+void dibujarPlayer( int tablero[Alto][Ancho], int posx, int posy){
+    for(int y = 0; y < Alto; y++){
+        for(int x = 0; x < Ancho; x++){
+            if (tablero[y][x] == 2){
+                gotoxy(x+posx,y+posy); printf("%c", 1);
+                return;
             }
         }
+    }
+}
+
+int randRange(int min, int max){
+    return rand() % (max - min + 1) + min;
+}
+
+void generarmazmorra(int tablero[Alto][Ancho], int x, int y, int puente){
+    int ancho = randRange(2, 3);
+    int alto = randRange(2, 2);
+    int direccion;
+
+    for (int i = 0; i<=ancho; i++){
+        if (tablero[y+alto][x+i] != 0 
+        || tablero[y+alto][x-i] != 0 
+        || tablero[y-alto][x+i] != 0 
+        || tablero[y-alto][x-i] != 0){return;}
+    }
+    for (int i = 0; i<alto; i++){
+        if (tablero[y+i][x+ancho] != 0 
+        || tablero[y-i][x+ancho] != 0 
+        || tablero[y+i][x-ancho] != 0 
+        || tablero[y-i][x-ancho] != 0){return;}
+    }
+
+    for (int i = 0; i<=ancho; i++){
+        tablero[y+alto][x+i] = 1;
+        tablero[y+alto][x-i] = 1;
+        tablero[y-alto][x+i] = 1;
+        tablero[y-alto][x-i] = 1;
+    }
+    for (int i = 0; i<alto; i++){
+        tablero[y+i][x+ancho] = 1;
+        tablero[y-i][x+ancho] = 1;
+        tablero[y+i][x-ancho] = 1;
+        tablero[y-i][x-ancho] = 1;
+    }
+
+    if(puente == 1){
+        tablero[y][x+ancho] = 0;
+    }else if(puente == 2){
+        tablero[y][x-ancho] = 0;
+    }else if(puente == 3){
+        tablero[y+alto][x] = 0;
+    }else if(puente == 4){
+        tablero[y-alto][x] = 0;
+    }
+
+    do{
+        direccion = rand() % 4 +1;
+    } while (direccion == puente);
+
+
+    if(direccion == 1){
+        tablero[y][x+ancho] = 0;
+        if (x+ancho*2+2 > Ancho){return;}
+        if (tablero[y+1][x+ancho+2] != 0){return;}
+        generarmazmorra(tablero, x+ancho*2+2, y, 2);
+    }else if(direccion == 2){
+        tablero[y][x-ancho] = 0;
+        if (x-ancho*2-2 < 0){return;}
+        if (tablero[y+1][x-ancho-2] != 0){return;}
+        generarmazmorra(tablero, x-ancho*2-2, y, 1);
+    }else if(direccion == 3){
+        tablero[y+alto][x] = 0;
+        if (y+alto*2+2 > Alto){return;}
+        if (tablero[y+alto*2+2][x+1] != 0){return;}
+        generarmazmorra(tablero, x, y+alto*2+2, 4);
+    }else if(direccion == 4){
+        tablero[y-alto][x] = 0;
+        if (y-alto*2-2 < 0){return;}
+        if (tablero[y-alto*2-2][x+1] != 0){return;}
+        generarmazmorra(tablero, x, y-alto*2-2, 3);
     }
 }
 
@@ -93,7 +152,7 @@ void borrarPantalla( int tablero[Alto][Ancho], int posx, int posy){
 }
 
 int main(){
-    setConsoleDim(100, 40);
+    setConsoleDim(110, 45);
     setConsoleColor('0','F');
     hidecursor();
     srand(time(0));
@@ -107,18 +166,18 @@ int main(){
     }
 
     int player[2] = {15,5};
-    for (int i = 0; i < 8; i++){
-        crearCasa(tablero, rand() % 20, rand() % 20, 5, 5);
-    }
+    generarmazmorra(tablero, Ancho/2, Alto/2, 0);
+    dibujarPantalla(tablero, 5, 2);
+
     while(1){
-        borrarPantalla(tablero, 30, 8);
+        borrarPantalla(tablero, 5, 2);
 
         gotoxy(0,0); printf("%d  , %d  ", player[0], player[1]);
 
         inputPlayer(tablero, player);
         crearPlayer(tablero, player, 2);
-
-        dibujarPantalla(tablero, 30, 8);
+        dibujarPlayer(tablero, 5, 2);
+        
         Sleep(100);
 
     }
