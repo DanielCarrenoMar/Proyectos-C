@@ -1,6 +1,11 @@
 #ifndef _COLORAMA_H_
 #define _COLORAMA_H_
 
+#ifdef _WIN32
+void just_fix_windows_console();
+#include "Colorama.c"
+#endif
+
 #define Style_RESET_ALL "\x1b[0m"
 #define Style_BRIGHT    "\x1b[1m"
 #define Style_DIM       "\x1b[2m"
