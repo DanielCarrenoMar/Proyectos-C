@@ -60,3 +60,28 @@ void imprimirMatriz(int* matriz, int x, int y){
         printf("\n");
     }
 }
+
+#ifdef _WIN32
+
+/*
+    Mueve el Cursor a una posicion especifica WINDOWS
+*/
+void gotoxy(int x, int y){
+    HANDLE hcon;
+    hcon = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD dwPos;
+    dwPos.X = x;
+    dwPos.Y = y;
+    SetConsoleCursorPosition(hcon, dwPos);
+}
+
+#else
+
+/*
+    Mueve el Cursor a una posicion especifica LINUX
+*/
+void gotoxy(int x, int y){
+    printf("%c[%d;%df",0x1B,y,x);
+}
+
+#endif

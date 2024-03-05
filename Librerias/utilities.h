@@ -6,11 +6,21 @@
 #include <string.h>
 
 #ifdef _WIN32
+#include <conio.h>
+#include <windows.h>
+
+#define CLEAR "cls"
 
 #else
+#define CLEAR "clear"
+
 
 #endif
 
+// Duales
+void gotoxy(int x, int y);
+
+// Comunes
 int pedirNum (char* mensaje);
 char* pedirCadena(char* mensaje);
 void limpiarMatriz(int* matriz, int x, int y, int valor);
