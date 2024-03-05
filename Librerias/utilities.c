@@ -60,7 +60,12 @@ void imprimirMatriz(int* matriz, int x, int y){
         printf("\n");
     }
 }
-
+/*
+    Borra la pantalla
+*/
+void borrarPantalla(){
+    system(CLEAR);
+}
 #ifdef _WIN32
 
 /*

@@ -18,6 +18,7 @@
 #endif
 
 // Duales
+void borrarPantalla();
 void gotoxy(int x, int y);
 
 // Comunes
