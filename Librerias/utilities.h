@@ -26,6 +26,7 @@ int pedirNum (char* mensaje);
 char* pedirCadena(char* mensaje);
 void limpiarMatriz(int* matriz, int x, int y, int valor);
 void imprimirMatriz(int* matriz, int x, int y);
+void recuadro(int x, int y, int w, int h);
 
 #include "utilities.c"
 #endif

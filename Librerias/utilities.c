@@ -1,3 +1,28 @@
+#ifdef _WIN32
+
+/*
+    Mueve el Cursor a una posicion especifica WINDOWS
+*/
+void gotoxy(int x, int y){
+    HANDLE hcon;
+    hcon = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD dwPos;
+    dwPos.X = x;
+    dwPos.Y = y;
+    SetConsoleCursorPosition(hcon, dwPos);
+}
+
+#else
+
+/*
+    Mueve el Cursor a una posicion especifica LINUX
+*/
+void gotoxy(int x, int y){
+    printf("%c[%d;%df",0x1B,y,x);
+}
+
+#endif
+
 /*
 Pide al usuario un número entero y lo devuelve.
 */
@@ -66,27 +91,22 @@ void imprimirMatriz(int* matriz, int x, int y){
 void borrarPantalla(){
     system(CLEAR);
 }
-#ifdef _WIN32
+void recuadro(int x, int y, int w, int h){
 
-/*
-    Mueve el Cursor a una posicion especifica WINDOWS
-*/
-void gotoxy(int x, int y){
-    HANDLE hcon;
-    hcon = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD dwPos;
-    dwPos.X = x;
-    dwPos.Y = y;
-    SetConsoleCursorPosition(hcon, dwPos);
+    for (int i = x; i < x + w; i++){
+        gotoxy(i, y);
+        printf("%c", 205);
+        gotoxy(i, y + h);
+        printf("%c", 205);
+    }
+    for (int i = y; i < y + h; i++){
+        gotoxy(x, i);
+        printf("%c", 186);
+        gotoxy(x + w, i);
+        printf("%c", 186);
+    }
+    gotoxy(x, y); printf("%c", 201);
+    gotoxy(x + w, y); printf("%c", 187);
+    gotoxy(x, y + h); printf("%c", 200);
+    gotoxy(x + w, y + h); printf("%c", 188);
 }
-
-#else
-
-/*
-    Mueve el Cursor a una posicion especifica LINUX
-*/
-void gotoxy(int x, int y){
-    printf("%c[%d;%df",0x1B,y,x);
-}
-
-#endif
