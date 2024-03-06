@@ -1,2 +1,4 @@
-#Plugins de gedirt
+## Plugins de gedit
+```
 sudo apt install gedit-plugins
+```
