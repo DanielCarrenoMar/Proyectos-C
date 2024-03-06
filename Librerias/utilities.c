@@ -24,7 +24,7 @@ void gotoxy(int x, int y){
 #endif
 
 /*
-Pide al usuario un número entero y lo devuelve.
+Pide al usuario un número entero de un digito y lo devuelve.
 */
 int pedirNum (char* mensaje){
     char num[10];
@@ -35,6 +35,22 @@ int pedirNum (char* mensaje){
         error = fgets(num, 10, stdin);
         if (error != NULL && num[0] >= '0' && num[0] <= '9'){
             return num[0] - '0';
+        }
+        printf("Error al leer el numero\n");
+    }
+}
+/*
+Pide al usuario un número entero y lo devuelve.
+*/
+int pedirNums (char* mensaje){
+    char num[10];
+    char* error;
+
+    while (1){
+        printf(mensaje);
+        error = fgets(num, 10, stdin);
+        if (error != NULL && num[0] >= '0' && num[0] <= '9'){
+            return atoi(num);
         }
         printf("Error al leer el numero\n");
     }
