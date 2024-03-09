@@ -1,28 +1,63 @@
-#include <windows.h>
 #include <stdlib.h>
 #include <stdio.h> 
 
+#ifdef _WIN32
+#include <conio.h>
+#include <windows.h>
+#define CLEAR "cls"
+
+/*
+    Mueve el Cursor a una posicion especifica WINDOWS
+*/
+void gotoxy(int x, int y){
+    HANDLE hcon;
+    hcon = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD dwPos;
+    dwPos.X = x;
+    dwPos.Y = y;
+    SetConsoleCursorPosition(hcon, dwPos);
+}
 void setConsoleColor(char bg, char fg){
     char cmd[30];
     sprintf(cmd, "color %c%c", bg, fg);
     system(cmd);
 }
-
 void setConsoleDim(int x, int y){
     char cmd[30];
     sprintf(cmd, "mode con: cols=%d lines=%d", x, y);
     system(cmd);
 }
-
-void gotoxy(int x, int y){ // centrar texto en la consola
-	HANDLE hcon;
-	hcon = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD dwPos;
-	dwPos.X = x;
-	dwPos.Y= y;
-	SetConsoleCursorPosition(hcon,dwPos);
+void hidecursor(){
+    printf("\e[?25l");
 }
 
+void showcursor() {
+    printf("\e[?25h");
+}
+
+void desactivarmax() {
+    HWND consoleWindow = GetConsoleWindow();
+    SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
+}
+
+#else
+#define CLEAR "clear"
+
+/*
+    Mueve el Cursor a una posicion especifica LINUX
+*/
+void gotoxy(int x, int y){
+    printf("%c[%d;%df",0x1B,y,x);
+}
+
+#endif
+
+/*
+    Borra la pantalla en cualquier sistema operativo
+*/
+void borrarPantalla(){
+    system(CLEAR);
+}
 void line(int x1, int y1, int x2, int y2, char sprite){
     int paso;
 
@@ -50,7 +85,7 @@ void line(int x1, int y1, int x2, int y2, char sprite){
     }
 }
 
-void poligono(int  coords[16][2], int elemt, char sprite){
+void poligono(int  coords[][2], int elemt, char sprite){
     for (int i = 0; i < elemt-1; i++){
         line(coords[i][0], coords[i][1], coords[i + 1][0], coords[i + 1][1], sprite);
     }
@@ -74,18 +109,5 @@ void recuadro(int x, int y, int w, int h){
     gotoxy(x + w, y); printf("%c", 187);
     gotoxy(x, y + h); printf("%c", 200);
     gotoxy(x + w, y + h); printf("%c", 188);
-}
-
-void hidecursor(){
-    printf("\e[?25l");
-}
-
-void showcursor() {
-    printf("\e[?25h");
-}
-
-void desactivarmax() {
-    HWND consoleWindow = GetConsoleWindow();
-    SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
 }
 
