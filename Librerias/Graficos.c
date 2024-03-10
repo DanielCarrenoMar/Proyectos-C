@@ -1,5 +1,32 @@
 #include <stdlib.h>
-#include <stdio.h> 
+#include <stdio.h>
+#include <math.h>
+
+int upL = 218; // ┌
+int upR = 191; // ┐
+int downR = 217; // ┘
+int downL = 192; // └
+int cross = 197; // ┼
+int crossD = 194; // ┬
+int crossU = 193; // ┴
+int crossR = 195; // ├
+int crossL = 180; // ┤
+int vLine = 179; // │
+int hLine = 196; // ─
+
+void cfSimpleTabla(){
+    upL = 'O'; // ┌
+    upR = 'O'; // ┐
+    downR = 'O'; // ┘
+    downL = 'O'; // └
+    cross = '+'; // ┼
+    crossD = '+'; // ┬
+    crossU = '+'; // ┴
+    crossR = '+'; // ├
+    crossL = '+'; // ┤
+    vLine = '#'; // │
+    hLine = '#'; // ─
+}
 
 #ifdef _WIN32
 #include <conio.h>
@@ -120,17 +147,6 @@ void recuadro(int x, int y, int w, int h){
     Dibuja unta tabla con dimensiones especificas
 */
 void tabla(int X , int Y, int colum, int filas, int Xsize, int Ysize){
-    int upL = 218; // ┌
-    int upR = 191; // ┐
-    int downR = 217; // ┘
-    int downL = 192; // └
-    int cross = 197; // ┼
-    int crossD = 194; // ┬
-    int crossU = 193; // ┴
-    int crossR = 195; // ├
-    int crossL = 180; // ┤
-    int vLine = 179; // │
-    int hLine = 196; // ─
 
     gotoxy(X,Y); printf("%c", upL);
 
@@ -175,13 +191,11 @@ void tabla(int X , int Y, int colum, int filas, int Xsize, int Ysize){
 
     for (int f = 0; f < filas; f++){
         for (int yz = 1; yz < Ysize+1; yz++){
-            gotoxy(X,Y + (Ysize+1) * f + yz); printf("%c", vLine);
+            int temp = Y + (Ysize+1) * f + yz;
+            gotoxy(X, temp); printf("%c", vLine);
 
-            for (int c = 0; c < colum; c++){
-                for (int xz = 0; xz < Xsize; xz++){
-                    printf(" ");
-                }
-                printf("%c", vLine);
+            for (int c = 0; c <= colum; c++){
+                gotoxy(X + (Xsize+1) * c,temp); printf("%c", vLine);
             }
         }
     }
@@ -192,9 +206,56 @@ void tabla(int X , int Y, int colum, int filas, int Xsize, int Ysize){
 void cuadrado(int X, int Y, int w, int h, char sprite){
     for (int y = Y; y < Y + h; y++){
         gotoxy(X, y); 
-        
         for (int x = X; x < X + w; x++){
             printf("%c", sprite);
         }
     }
+}
+/*
+    Dibuja un circulo vacio en la pantalla
+*/
+void circunferencia(int x, int y, int xr, int yr, char sprite){
+    for (int i = 1; i < 360; i++){
+        float rad = i * 3.1416 / 180;
+        gotoxy(x + xr * cos(rad), y + yr * sin(rad));
+        printf("%c", sprite);
+    }
+}
+/*
+    Dibuja un cubo en las coordenadas TAM: 30 X 17
+*/
+void drawCube(int x, int y){
+    
+    gotoxy(x+7, y); printf  ("xxxxxxxxxxxxxxxxxxxxxxx");
+    gotoxy(x+6, y+1); printf("x                     xx");
+    gotoxy(x+5, y+2); printf("x                     x x");
+    gotoxy(x+4, y+3); printf("x                     x  x");
+    gotoxy(x+3, y+4); printf("x                     x   x");
+    gotoxy(x+2, y+5); printf("x                     x    x");
+    gotoxy(x+1, y+6); printf("x                     x     x");
+    gotoxy(x, y+7); printf  ("XXXXXXXXXXXXXXXXXXXXXXX      x");
+    gotoxy(x, y+8); printf  ("X                     X      x");
+    gotoxy(x, y+9); printf  ("X                     X      x");
+    gotoxy(x, y+10); printf("X                     X      x");
+    gotoxy(x, y+11); printf("X                     X     x");
+    gotoxy(x, y+12); printf("X                     X    x");
+    gotoxy(x, y+13); printf("X                     X   x");
+    gotoxy(x, y+14); printf("X                     X  x");
+    gotoxy(x, y+15); printf("X                     X x");
+    gotoxy(x, y+16); printf("X                     Xx");
+    gotoxy(x, y+17); printf("XXXXXXXXXXXXXXXXXXXXXXX"); 
+}
+/*
+    Dibuja CubiTz con ASCII en las coordenadas TAM: 54 X 8
+*/
+void drawCubiTz(int x, int y){
+    gotoxy(x, y); printf(" ______             __        __  ________          ");
+    gotoxy(x, y+1); printf("/      \\           /  |      /  |/        |         ");
+    gotoxy(x, y+2); printf("$$$$$$  |  __   __ $$ |____  $$/ $$$$$$$$/________  ");
+    gotoxy(x, y+3); printf("$$ |  $$/ /  |  /  |$$      \\ /  |   $$ | /        |");
+    gotoxy(x, y+4); printf("$$ |      $$ |  $$ |$$$$$$$  |$$ |   $$ | $$$$$$$$/ ");
+    gotoxy(x, y+5); printf("$$ |   __ $$ |  $$ |$$ |  $$ |$$ |   $$ |   /  $$/  ");
+    gotoxy(x, y+6); printf("$$ \\__/  |$$ \\__$$ |$$ |__$$ |$$ |   $$ |  /$$$$/__ ");
+    gotoxy(x, y+7); printf("$$    $$/ $$    $$/ $$    $$/ $$ |   $$ | /$$      |");
+    gotoxy(x, y+8); printf(" $$$$$$/   $$$$$$/  $$$$$$$/  $$/    $$/  $$$$$$$$/ ");
 }
